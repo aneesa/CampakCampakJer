@@ -115,8 +115,36 @@ angular.module('CampakCampakJer.controllers', ['CampakCampakJer.services'])
             $rootScope.notify("Oops something went wrong!! Please try again later");
         });
     });
-
+	
     $rootScope.$broadcast('fetchDetails');
+	
+	// add a step to recipe
+	$scope.addRecipeStep = function () {
+		// get the recipe's step
+		// if step is empty, return nothing 
+		// else close this slide-up and save the new recipe
+		var addStep = this.recipe.addStep;
+		if (!addStep) return;
+
+		// get the data from user
+		var form = {
+			recipeId: this.recipe._id,
+			step: addStep,
+			created: Date.now(),
+			updated: Date.now()
+		}
+
+		// save the recipe
+		API.saveRecipeStep(form)
+			.success(function (data, status, headers, config) {
+				// if successful, refresh to the recipe's details tab
+				$rootScope.doRefresh(2);
+			})
+			.error(function (data, status, headers, config) {
+				// if error, notify error messages to user
+				$rootScope.notify("Oops something went wrong!! Please try again later");
+			});
+	};
 
 	// TODO: save this as an example to be used for recipe steps
     $scope.deleteItem = function (id) {
@@ -130,5 +158,4 @@ angular.module('CampakCampakJer.controllers', ['CampakCampakJer.services'])
                 $rootScope.notify("Oops something went wrong!! Please try again later");
             });
     };
-
 })

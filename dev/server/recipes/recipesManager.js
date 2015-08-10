@@ -52,6 +52,55 @@ module.exports = function(server) {
         });
 	});
 	
+	// save a recipe step to db
+	server.post('/api/campakcampakjer/recipestep', function(req, res) {
+	
+		// use mongoose to get the recipe and save the new step to the database
+		Recipe.findOne({ _id : req.params.recipeId})
+			.populate('steps')
+			.exec(function(err, recipe) {
+
+				// if there is an error retrieving, send the error. nothing after res.send(err) will execute
+				if (err)
+					return res.send(err)
+					
+				// get the new position of the step in recipe
+				var newPosition = 0;
+				if(recipe.steps.length!=0) newPosition = recipe.steps.length;
+
+				// create the new step with the new position
+				var newStep = new RecipeStep();
+				newStep.position = newPosition;
+				newStep.step = req.params.step;
+				
+				// save the recipe step
+				// if successful, save the recipe with the new step
+				newStep.save(function(err, recipeStepSaved) {
+		
+					// if there is an error retrieving, send the error. nothing after res.send(err) will execute
+					if(err) 
+						return res.send(err);
+						
+					// add the new step to the recipe
+					recipe.steps.push(recipeStepSaved);
+					
+					// save the recipe
+					recipe.save(function(err, recipeSaved) {
+			
+						// if there is an error retrieving, send the error. nothing after res.send(err) will execute
+						if(err) 
+							return res.send(err);
+							
+						
+						res.json(recipeSaved); // return the recipe in JSON format
+					});
+					
+				});
+				
+				
+		});
+	});
+	
 //	// update an existing recipe in db
 //    server.put('/api/campakcampakjer/recipe/:id', function (req, res) {
 //	

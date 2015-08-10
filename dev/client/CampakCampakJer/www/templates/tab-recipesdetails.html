@@ -3,11 +3,17 @@
    <button class="button button-clear" ng-click="newRecipe()">New</button>
 </ion-header-bar>
 <ion-content class="has-header padding" has-tabs="true" on-refresh="onRefresh()">
+	<ion-list>
+      <ion-item class="item-remove-animate item-avatar item-icon-right" ng-repeat="step in recipe.steps" type="item-text-wrap">
+        <p>{{step.position}} : {{step.step}}</p>
+      </ion-item>
+    </ion-list>
    <div class="card">
       <div class="item item-text-wrap">
          <span>
-			Steps here
-         </span>
+			<input type="text" placeholder="Add a step..." ng-model="recipe.addStep">
+         </span> 
+		 <button class="button button-positive" ng-click="addRecipeStep()">Add</button>
       </div>
    </div>
 </ion-content>
