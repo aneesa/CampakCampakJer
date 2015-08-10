@@ -27,12 +27,8 @@ angular.module('CampakCampakJer.controllers', ['CampakCampakJer.services'])
             $scope.newRecipe = function () {
                 $scope.newTemplate.show();
             };
-			
-			// hide any indicators
-            $rootScope.hide();
         }).error(function (data, status, headers, config) {
-			// if error, hide any indicators and notify error message to users
-            $rootScope.hide();
+			// if error, notify error message to users
             $rootScope.notify("Oops something went wrong!! Please try again later");
         });
     });
@@ -76,14 +72,11 @@ angular.module('CampakCampakJer.controllers', ['CampakCampakJer.services'])
 			var name = this.recipe.name;
         	if (!name) return;
             $scope.modal.hide();
-            $rootScope.show();
-            
-            $rootScope.show("Please wait... Creating new");
 
 			// get the data from user
             var form = {
                 name: name,
-                step: step,
+                step: this.recipe.step,
                 created: Date.now(),
                 updated: Date.now()
             }
@@ -91,13 +84,11 @@ angular.module('CampakCampakJer.controllers', ['CampakCampakJer.services'])
 			// save the recipe
             API.saveRecipe(form)
                 .success(function (data, status, headers, config) {
-					// if successful, hide any indicators and refresh to the recipe's details tab
-                    $rootScope.hide();
+					// if successful, refresh to the recipe's details tab
                     $rootScope.doRefresh(1);
                 })
                 .error(function (data, status, headers, config) {
-					// if error, hide any indicators and notify error messages to user
-                    $rootScope.hide();
+					// if error, notify error messages to user
                     $rootScope.notify("Oops something went wrong!! Please try again later");
                 });
         };

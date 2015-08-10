@@ -39,35 +39,35 @@ angular.module('CampakCampakJer.services', [])
         return {
 			// get all recipes from API
             getAllRecipes: function () {
-                return $http.get(base+'/api/v1/bucketList/data/list', {
+                return $http.get(base+'/api/campakcampakjer/recipes', {
                     method: 'GET'
                 });
             },
 			
 			// get a recipe by id from API
             getOneRecipe: function (id) {
-                return $http.get(base+'/api/v1/bucketList/data/item/' + id, {
+                return $http.get(base+'/api/campakcampakjer/recipe/' + id, {
                     method: 'GET'
                 });
             },
 			
 			// save new recipe to API
             saveRecipe: function (form) {
-                return $http.post(base+'/api/v1/bucketList/data/item', form, {
+                return $http.post(base+'/api/campakcampakjer/recipe', form, {
                     method: 'POST'
                 });
             },
 			
 			// update an existing recipe to API
             updateRecipe: function (id, form) {
-                return $http.put(base+'/api/v1/bucketList/data/item/' + id, form, {
+                return $http.put(base+'/api/campakcampakjer/recipe/' + id, form, {
                     method: 'PUT'
                 });
             },
 			
 			// delete an existing recipe using API
             deleteRecipe: function (id) {
-                return $http.delete(base+'/api/v1/bucketList/data/item/' + id, {
+                return $http.delete(base+'/api/campakcampakjer/recipe/' + id, {
                     method: 'DELETE'
                 });
             }
