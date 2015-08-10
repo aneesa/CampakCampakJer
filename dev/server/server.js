@@ -1,23 +1,15 @@
 var restify     =   require('restify');
 var mongojs     =   require('mongojs');
 var	morgan  	= 	require('morgan');
+var db          =   mongojs('bucketlistapp', ['bucketLists']);
+var server      =   restify.createServer();
 
-var port  	 	= 	9804; 														// set the port
-var db          =   mongojs('campakcampakjerdb', ['recipes']);					// set the db and its collections
-
-var server      =   restify.createServer();										// create the REST server
-
-// data managers
-var recipeManager =   require('./recipes/recipeManager')(server, db);
-
-// logging configs
 server.use(restify.acceptParser(server.acceptable));
 server.use(restify.queryParser());
 server.use(restify.bodyParser());
 server.use(morgan('dev')); // LOGGER
 
-// CORS (Cross Origin Request Sharing)
-// allow any web based client to access this server
+// CORS
 server.use(function(req, res, next) {
     res.header('Access-Control-Allow-Origin', "*");
     res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
@@ -25,7 +17,9 @@ server.use(function(req, res, next) {
     next();
 });
 
-// start the server
-server.listen(port, function () {
-    console.log("Server started @ ", port);
+server.listen(process.env.PORT || 9804, function () {
+    console.log("Server started @ ", process.env.PORT || 9804);
 });
+
+//var manageUsers =   require('./auth/manageUser')(server, db);
+var manageLists =   require('./list/manageList')(server, db);
