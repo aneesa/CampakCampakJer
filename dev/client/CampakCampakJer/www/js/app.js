@@ -1,4 +1,4 @@
-angular.module('bucketList', ['ionic', 'bucketList.controllers', 'bucketList.services'])
+angular.module('CampakCampakJer', ['ionic', 'CampakCampakJer.controllers', 'CampakCampakJer.services'])
     .run(function ($ionicPlatform) {
         $ionicPlatform.ready(function () {
             if (window.StatusBar) {
@@ -7,30 +7,22 @@ angular.module('bucketList', ['ionic', 'bucketList.controllers', 'bucketList.ser
             }
         });
     })
+	// reroute urls, set controllers to pages/tabs
     .config(function ($stateProvider, $urlRouterProvider) {
         $stateProvider
-            .state('bucket', {
-                url: "/bucket",
+            .state('recipes', {
+                url: "/recipes",
                 abstract: true,
-                templateUrl: "templates/bucket.html"
+                templateUrl: "templates/tabs.html"
             })
-            .state('bucket.list', {
+            .state('recipes.list', {
                 url: '/list',
                 views: {
-                    'bucket-list': {
-                        templateUrl: 'templates/bucket-list.html',
-                        controller: 'myListCtrl'
+                    'recipes-list': {
+                        templateUrl: 'templates/tab-recipeslist.html',
+                        controller: 'myRecipeListCtrl'
                     }
                 }
             })
-            .state('bucket.completed', {
-                url: '/completed',
-                views: {
-                    'bucket-completed': {
-                        templateUrl: 'templates/bucket-completed.html',
-                        controller: 'completedCtrl'
-                    }
-                }
-            })
-        $urlRouterProvider.otherwise('/bucket/list');
+        $urlRouterProvider.otherwise('/recipes/list');
     });

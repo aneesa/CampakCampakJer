@@ -1,0 +1,21 @@
+<ion-header-bar class="bar-positive">
+   <h1 class="title">My Recipes</h1>
+   <button class="button button-clear" ng-click="newRecipe()">New</button>
+</ion-header-bar>
+<ion-content class="has-header padding" has-tabs="true" on-refresh="onRefresh()">
+   <ion-refresher ng-hide="noData" on-refresh="doRefresh('1')"></ion-refresher>
+   <div class="card" ng-repeat="recipe in recipes" >
+      <div class="item item-text-wrap">
+         <span>
+         {{ recipe.name }}
+         </span>
+      </div>
+   </div>
+   <div class="card" >
+      <div class="item item-text-wrap" ng-show="noData">
+         <span>
+         No recipe in your cookbook. Click  <a href="javascript:" ng-click="newRecipe()">HERE</a> and create one
+         </span>
+      </div>
+   </div>
+</ion-content>

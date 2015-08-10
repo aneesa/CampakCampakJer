@@ -1,16 +1,15 @@
-angular.module('bucketList.controllers', ['bucketList.services'])
+angular.module('CampakCampakJer.controllers', ['CampakCampakJer.services'])
 
-.controller('myListCtrl', function ($rootScope, $scope, API, $timeout, $ionicModal, $window) {
+// controller for recipes/list tab	
+.controller('myRecipeListCtrl', function ($rootScope, $scope, API, $timeout, $ionicModal, $window) {
+	// display all recipes when the tab is selected
     $rootScope.$on('fetchAll', function(){
-            API.getAll().success(function (data, status, headers, config) {
-            //$rootScope.show("Please wait... Processing");
-            $scope.list = [];
+        API.getAllRecipes().success(function (data, status, headers, config) {
+            $scope.recipes = [];
             for (var i = 0; i < data.length; i++) {
-                if (data[i].isCompleted == false) {
-                    $scope.list.push(data[i]);
-                }
+                $scope.recipes.push(data[i]);
             };
-            if($scope.list.length == 0)
+            if($scope.recipes.length == 0)
             {
                 $scope.noData = true;
             }
@@ -19,15 +18,20 @@ angular.module('bucketList.controllers', ['bucketList.services'])
                 $scope.noData = false;
             }
 
-            $ionicModal.fromTemplateUrl('templates/newItem.html', function (modal) {
+			// set up slide-up for creating new recipe
+            $ionicModal.fromTemplateUrl('templates/slide-newrecipe.html', function (modal) {
                 $scope.newTemplate = modal;
             });
 
-            $scope.newTask = function () {
+			// show slide-up for creating new recipe when called
+            $scope.newRecipe = function () {
                 $scope.newTemplate.show();
             };
+			
+			// hide any indicators
             $rootScope.hide();
         }).error(function (data, status, headers, config) {
+			// if error, hide any indicators and notify error message to users
             $rootScope.hide();
             $rootScope.notify("Oops something went wrong!! Please try again later");
         });
@@ -35,22 +39,7 @@ angular.module('bucketList.controllers', ['bucketList.services'])
 
     $rootScope.$broadcast('fetchAll');
 
-    $scope.markCompleted = function (id) {
-        $rootScope.show("Please wait... Updating List");
-        API.putItem(id, {
-            isCompleted: true
-        }, $rootScope.getToken())
-            .success(function (data, status, headers, config) {
-                $rootScope.hide();
-                $rootScope.doRefresh(1);
-            }).error(function (data, status, headers, config) {
-                $rootScope.hide();
-                $rootScope.notify("Oops something went wrong!! Please try again later");
-            });
-    };
-
-
-
+	// TODO: save this as an example to be used for recipe steps
     $scope.deleteItem = function (id) {
         $rootScope.show("Please wait... Deleting from List");
         API.deleteItem(id, $rootScope.getToken())
@@ -65,83 +54,49 @@ angular.module('bucketList.controllers', ['bucketList.services'])
 
 })
 
-.controller('completedCtrl', function ($rootScope,$scope, API, $window) {
-        $rootScope.$on('fetchCompleted', function () {
-            API.getAll().success(function (data, status, headers, config) {
-                $scope.list = [];
-                for (var i = 0; i < data.length; i++) {
-                    if (data[i].isCompleted == true) {
-                        $scope.list.push(data[i]);
-                    }
-                };
-                if(data.length > 0 & $scope.list.length == 0)
-                {
-                    $scope.incomplete = true;
-                }
-                else
-                {
-                    $scope.incomplete= false;
-                }
-                
-                if(data.length == 0)
-                {
-                    $scope.noData = true;
-                }
-                else
-                {
-                    $scope.noData = false;
-                }
-            }).error(function (data, status, headers, config) {
-                $rootScope.notify("Oops something went wrong!! Please try again later");
-            });
+// controller for slide-newrecipe.html
+.controller('myNewRecipeCtrl', function ($rootScope, $scope, API, $window) {
 
-        });
-        
-        $rootScope.$broadcast('fetchCompleted');
-        $scope.deleteItem = function (id) {
-            $rootScope.show("Please wait... Deleting from List");
-            API.deleteItem(id, $rootScope.getToken())
-                .success(function (data, status, headers, config) {
-                    $rootScope.hide();
-                    $rootScope.doRefresh(2);
-                }).error(function (data, status, headers, config) {
-                    $rootScope.hide();
-                    $rootScope.notify("Oops something went wrong!! Please try again later");
-                });
-        };
-    })
-
-.controller('newCtrl', function ($rootScope, $scope, API, $window) {
-        $scope.data = {
-	        item: ""
+		// reset the new recipe
+        $scope.recipe = {
+	        name: "",
+			step: ""
 	    };
 
+		// close this slide-up when called
         $scope.close = function () {
             $scope.modal.hide();
         };
 
-        $scope.createNew = function () {
-			var item = this.data.item;
-        	if (!item) return;
+		// create and save a new recipe when called
+        $scope.createNewRecipe = function () {
+			// get the recipe's name
+			// if name is empty, return nothing 
+			// else close this slide-up and save the new recipe
+			var name = this.recipe.name;
+        	if (!name) return;
             $scope.modal.hide();
             $rootScope.show();
             
             $rootScope.show("Please wait... Creating new");
 
+			// get the data from user
             var form = {
-                item: item,
-                isCompleted: false,
-                user: $rootScope.getToken(),
+                name: name,
+                step: step,
                 created: Date.now(),
                 updated: Date.now()
             }
 
-            API.saveItem(form, form.user)
+			// save the recipe
+            API.saveRecipe(form)
                 .success(function (data, status, headers, config) {
+					// if successful, hide any indicators and refresh to the recipe's details tab
                     $rootScope.hide();
                     $rootScope.doRefresh(1);
                 })
                 .error(function (data, status, headers, config) {
+					// if error, hide any indicators and notify error messages to user
                     $rootScope.hide();
                     $rootScope.notify("Oops something went wrong!! Please try again later");
                 });

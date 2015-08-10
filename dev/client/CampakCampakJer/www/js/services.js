@@ -1,6 +1,8 @@
-angular.module('bucketList.services', [])
+angular.module('CampakCampakJer.services', [])
     .factory('API', function ($rootScope, $http, $ionicLoading, $window) {
-       var base = "http://localhost:9804";
+		var base = "http://localhost:9804";
+		
+		// show loading indicator
         $rootScope.show = function (text) {
             $rootScope.loading = $ionicLoading.show({
                 content: text ? text : 'Loading',
@@ -11,22 +13,20 @@ angular.module('bucketList.services', [])
             });
         };
 
+		// hide loading indicator
         $rootScope.hide = function () {
             $ionicLoading.hide();
         };
 
-        $rootScope.logout = function () {
-            $rootScope.setToken("");
-            $window.location.href = '#/auth/signin';
-        };
-
-        $rootScope.notify =function(text){
+		// notify user
+        $rootScope.notify = function(text){
             $rootScope.show(text);
             $window.setTimeout(function () {
               $rootScope.hide();
             }, 1999);
         };
 
+		// refresh to the correct pages/tabs
         $rootScope.doRefresh = function (tab) {
             if(tab == 1)
                 $rootScope.$broadcast('fetchAll');
@@ -36,54 +36,39 @@ angular.module('bucketList.services', [])
             $rootScope.$broadcast('scroll.refreshComplete');
         };
 
-        $rootScope.setToken = function (token) {
-            return $window.localStorage.token = token;
-        }
-
-        $rootScope.getToken = function () {
-            return $window.localStorage.token;
-        }
-
-        $rootScope.isSessionActive = function () {
-            return $window.localStorage.token ? true : false;
-        }
-
         return {
-            getAll: function () {
+			// get all recipes from API
+            getAllRecipes: function () {
                 return $http.get(base+'/api/v1/bucketList/data/list', {
                     method: 'GET'
                 });
             },
-            getOne: function (id, email) {
+			
+			// get a recipe by id from API
+            getOneRecipe: function (id) {
                 return $http.get(base+'/api/v1/bucketList/data/item/' + id, {
-                    method: 'GET',
-                    params: {
-                        token: email
-                    }
+                    method: 'GET'
                 });
             },
-            saveItem: function (form, email) {
+			
+			// save new recipe to API
+            saveRecipe: function (form) {
                 return $http.post(base+'/api/v1/bucketList/data/item', form, {
-                    method: 'POST',
-                    params: {
-                        token: email
-                    }
+                    method: 'POST'
                 });
             },
-            putItem: function (id, form, email) {
+			
+			// update an existing recipe to API
+            updateRecipe: function (id, form) {
                 return $http.put(base+'/api/v1/bucketList/data/item/' + id, form, {
-                    method: 'PUT',
-                    params: {
-                        token: email
-                    }
+                    method: 'PUT'
                 });
             },
-            deleteItem: function (id, email) {
+			
+			// delete an existing recipe using API
+            deleteRecipe: function (id) {
                 return $http.delete(base+'/api/v1/bucketList/data/item/' + id, {
-                    method: 'DELETE',
-                    params: {
-                        token: email
-                    }
+                    method: 'DELETE'
                 });
             }
         }
