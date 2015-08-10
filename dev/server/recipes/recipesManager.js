@@ -35,14 +35,11 @@ module.exports = function(server) {
 		});
 	});
 	
-	// save a recipe to db and sen
-	// create ship captain and send back all ship captains after creation
+	// save a recipe to db
 	server.post('/api/campakcampakjer/recipe', function(req, res) {
 
 		// create the new recipe model first
-		var newRecipe = new Recipe({ name: req.params.name});
-		
-		// TODO: update the steps as well
+		var newRecipe = new Recipe({ name: req.params.name });
 		
 		// use mongoose to save the new recipe to the database
 		newRecipe.save(function(err, recipeSaved) {

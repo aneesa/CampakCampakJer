@@ -24,5 +24,14 @@ angular.module('CampakCampakJer', ['ionic', 'CampakCampakJer.controllers', 'Camp
                     }
                 }
             })
+            .state('recipes.details', {
+                url: '/details/:id',
+                views: {
+                    'recipes-list': {
+                        templateUrl: 'templates/tab-recipesdetails.html',
+                        controller: 'myRecipeDetailsCtrl'
+                    }
+                }
+            })
         $urlRouterProvider.otherwise('/recipes/list');
     });

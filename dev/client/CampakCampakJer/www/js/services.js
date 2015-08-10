@@ -31,7 +31,7 @@ angular.module('CampakCampakJer.services', [])
             if(tab == 1)
                 $rootScope.$broadcast('fetchAll');
             else
-                $rootScope.$broadcast('fetchCompleted');
+                $rootScope.$broadcast('fetchDetails');
             
             $rootScope.$broadcast('scroll.refreshComplete');
         };

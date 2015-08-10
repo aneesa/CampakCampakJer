@@ -3,14 +3,12 @@
    <button class="button button-clear" ng-click="newRecipe()">New</button>
 </ion-header-bar>
 <ion-content class="has-header padding" has-tabs="true" on-refresh="onRefresh()">
-   <ion-refresher ng-hide="noData" on-refresh="doRefresh('1')"></ion-refresher>
-   <div class="card" ng-repeat="recipe in recipes" >
-      <div class="item item-text-wrap">
-         <span>
-         {{ recipe.name }}
-         </span>
-      </div>
-   </div>
+    <ion-list>
+      <ion-item class="item-remove-animate item-avatar item-icon-right" ng-repeat="recipe in recipes" type="item-text-wrap" href="#/recipes/details/{{recipe._id}}">
+        <p>{{recipe.name}}</p>
+        <i class="icon ion-chevron-right icon-accessory"></i>
+      </ion-item>
+    </ion-list>
    <div class="card" >
       <div class="item item-text-wrap" ng-show="noData">
          <span>
