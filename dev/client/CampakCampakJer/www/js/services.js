@@ -58,18 +58,18 @@ angular.module('CampakCampakJer.services', [])
                 });
             },
 			
-			// update an existing recipe to API
-            updateRecipe: function (id, form) {
-                return $http.put(base+'/api/campakcampakjer/recipe/' + id, form, {
-                    method: 'PUT'
-                });
-            },
-			
-			// delete an existing recipe using API
-            deleteRecipe: function (id) {
-                return $http.delete(base+'/api/campakcampakjer/recipe/' + id, {
-                    method: 'DELETE'
-                });
-            }
+			//// update an existing recipe to API
+   //         updateRecipe: function (id, form) {
+   //             return $http.put(base+'/api/campakcampakjer/recipe/' + id, form, {
+   //                 method: 'PUT'
+   //             });
+   //         },
+			//
+			//// delete an existing recipe using API
+   //         deleteRecipe: function (id) {
+   //             return $http.delete(base+'/api/campakcampakjer/recipe/' + id, {
+   //                 method: 'DELETE'
+   //             });
+   //         }
         }
     });

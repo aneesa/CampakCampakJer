@@ -1,10 +1,17 @@
-var restify     =   require('restify');
-var mongojs     =   require('mongojs');
-var	morgan  	= 	require('morgan');
+var restify     = require('restify');		// framework for building REST APIs
+var mongoose 	= require('mongoose');		// mongoose for mongodb
+var	morgan  	= require('morgan');		// log requests to the console
 
-// db config name and collections
-var db          =   mongojs('campakcampakjerdb', ['recipes']);
-var server      =   restify.createServer();
+var port  	 = 9804; 			// set the port
+var address  = '127.0.0.1'; 	// Listen to localhost 
+
+// db config
+var database = "mongodb://localhost/campakcampakjerdb"; // "username:password@example.com/mydb"
+mongoose.connect(database);
+console.log("MongoDB connected @ " + database);
+
+// create REST server
+var server      	=   restify.createServer();
 
 // logging config
 server.use(restify.acceptParser(server.acceptable));
@@ -21,10 +28,10 @@ server.use(function(req, res, next) {
     next();
 });
 
-// set server to listen for requests
-server.listen(process.env.PORT || 9804, function () {
-    console.log("Server started @ ", process.env.PORT || 9804);
-});
-
 // model managers
-var recipesManager =   require('./recipes/recipesManager')(server, db);
+require('./recipes/recipesManager.js')(server);
+
+// set server to listen for requests
+server.listen(port, address, function () {
+    console.log("Server started @ " + address + ":" + port);
+});
