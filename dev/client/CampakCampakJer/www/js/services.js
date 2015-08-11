@@ -65,6 +65,13 @@ angular.module('CampakCampakJer.services', [])
                 });
             },
 			
+			// delete a recipe's step from API
+            deleteRecipeStep: function (recipeId, id) {
+                return $http.delete(base+'/api/campakcampakjer/recipestep/' + recipeId + '/' + id, {
+                    method: 'DELETE'
+                });
+            },
+			
 			//// update an existing recipe to API
    //         updateRecipe: function (id, form) {
    //             return $http.put(base+'/api/campakcampakjer/recipe/' + id, form, {

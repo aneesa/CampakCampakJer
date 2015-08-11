@@ -5,7 +5,8 @@
 <ion-content class="has-header padding" has-tabs="true" on-refresh="onRefresh()">
 	<ion-list>
       <ion-item class="item-remove-animate item-avatar item-icon-right" ng-repeat="step in recipe.steps" type="item-text-wrap">
-        <p>{{step.position}} : {{step.step}}</p>
+        Step {{step.position}} : {{step.step}}
+		<i class="icon ion-trash-b icon-actions margin" ng-click="deleteRecipeStep('{{recipe._id}}','{{step._id}}')"></i>
       </ion-item>
     </ion-list>
    <div class="card">

@@ -134,7 +134,7 @@ angular.module('CampakCampakJer.controllers', ['CampakCampakJer.services'])
 			updated: Date.now()
 		}
 
-		// save the recipe
+		// save the recipe step
 		API.saveRecipeStep(form)
 			.success(function (data, status, headers, config) {
 				// if successful, refresh to the recipe's details tab
@@ -146,16 +146,17 @@ angular.module('CampakCampakJer.controllers', ['CampakCampakJer.services'])
 			});
 	};
 
-	// TODO: save this as an example to be used for recipe steps
-    $scope.deleteItem = function (id) {
-        $rootScope.show("Please wait... Deleting from List");
-        API.deleteItem(id, $rootScope.getToken())
-            .success(function (data, status, headers, config) {
-                $rootScope.hide();
-                $rootScope.doRefresh(1);
-            }).error(function (data, status, headers, config) {
-                $rootScope.hide();
-                $rootScope.notify("Oops something went wrong!! Please try again later");
-            });
+	// delete recipe step
+    $scope.deleteRecipeStep = function (recipeId, id) {			
+		// delete the recipe step
+		API.deleteRecipeStep(recipeId, id)
+			.success(function (data, status, headers, config) {
+				// if successful, refresh to the recipe's details tab
+				$rootScope.doRefresh(2);
+			})
+			.error(function (data, status, headers, config) {
+				// if error, notify error messages to user
+				$rootScope.notify("Oops something went wrong!! Please try again later");
+			});
     };
 })

@@ -70,7 +70,7 @@ module.exports = function(server) {
 
 				// create the new step with the new position
 				var newStep = new RecipeStep();
-				newStep.position = newPosition;
+				newStep.position = recipe.steps.length+1;
 				newStep.step = req.params.step;
 				
 				// save the recipe step
@@ -100,6 +100,65 @@ module.exports = function(server) {
 				
 		});
 	});
+	
+	// delete an existing recipe step from db
+    server.del('/api/campakcampakjer/recipestep/:recipeId/:id', function (req, res) {
+	
+		// first find the recipe step
+		// remove it from db
+		// remove it from recipe.steps
+		// get the position
+		// rearrange position
+	
+		// use mongoose to get the recipe step by id and remove it from db
+		RecipeStep.findById(req.params.id, function(err, recipeStepToBeRemoved) {
+			// if there is an error retrieving, send the error. nothing after res.send(err) will execute
+			if(err) 
+				return res.send(err);
+
+			// Find the parent recipe
+			Recipe.findOne({ _id : req.params.recipeId})
+			.populate('steps')
+			.exec(function(err, recipe) {
+				// if there is an error retrieving, send the error. nothing after res.send(err) will execute
+				if(err) 
+					return res.send(err);
+					
+				var recipeStepPosition = recipeStepToBeRemoved.position;	// index in array = position-1
+				
+				// remove step from recipe's step array
+				recipe.steps.splice(recipeStepPosition-1,1);
+				
+				// for each step after the removed step, update their position and save in db
+				for(var i = recipeStepPosition-1; i < recipe.steps.length; i++) {
+					var curRecipeStep = recipe.steps[i];
+					curRecipeStep.position -= 1;
+					
+					curRecipeStep.save(function(err, recipeStepSaved) {
+						// if there is an error retrieving, send the error. nothing after res.send(err) will execute
+						if(err) 
+							return res.send(err);
+					});
+				}
+				
+				// now that all the steps have been updated, save the recipe
+				recipe.save(function(err, recipeSaved) {
+					// if there is an error retrieving, send the error. nothing after res.send(err) will execute
+					if(err) 
+						return res.send(err);
+						
+					// finally, remove the step from db
+					recipeStepToBeRemoved.remove(function(err) {
+						// if there is an error retrieving, send the error. nothing after res.send(err) will execute
+						if(err) 
+							return res.send(err);
+							
+						res.json(recipeSaved); // return the recipe updated in JSON format
+					});	
+				});	
+			});
+		});
+    });
 	
 //	// update an existing recipe in db
 //    server.put('/api/campakcampakjer/recipe/:id', function (req, res) {
@@ -142,17 +201,4 @@ module.exports = function(server) {
 ////			});
 ////		});
 //    });
-	
-	// delete an existing recipe from db
- //   server.del('/api/campakcampakjer/recipe/:id', function (req, res, next) {
-	//	db.recipes.remove({
-	//		_id: db.ObjectId(req.params.id)
-	//	}, function (err, recipe) {
-	//		res.writeHead(200, {
-	//			'Content-Type': 'application/json; charset=utf-8'
-	//		});
-	//		res.end(JSON.stringify(recipe));
-	//	});
-	//	return next();
- //   });
 }
