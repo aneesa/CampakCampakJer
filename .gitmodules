@@ -1,0 +1,3 @@
+[submodule "openshift/server"]
+	path = openshift/server
+	url = ssh://55c9b5b289f5cfc37300004b@campakcampakjer-ailuromaniac.rhcloud.com/~/git/campakcampakjer.git/

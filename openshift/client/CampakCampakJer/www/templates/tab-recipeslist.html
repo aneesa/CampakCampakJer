@@ -1,0 +1,24 @@
+<ion-header-bar class="bar-positive">
+   <h1 class="title">My Recipes</h1>
+   <button class="button" ng-click="newRecipe()">New</button>
+</ion-header-bar>
+<ion-content class="has-header padding" has-tabs="true" on-refresh="onRefresh()">
+    <ion-list>
+      <ion-item ng-repeat="recipe in recipes" type="item-text-wrap" href="#/recipes/details/{{recipe._id}}">
+		<!-- TODO: currently not working smoothly - after deleting a recipe, the view will be switched to the recipe's
+					step. Clicking on the 'My Recipes' tab will bring the app back to the main view, and the recipe
+					has indeed be deleted. However, clicking on another recipe will stop the app because of an error.
+		<ion-delete-button class="ion-trash-b" ng-click="deleteRecipe('{{recipe._id}}')"> </ion-delete-button>
+        &nbsp 
+		-->
+		{{recipe.name}}
+      </ion-item>
+    </ion-list>
+   <div class="card" >
+      <div class="item item-text-wrap" ng-show="noData">
+         <span>
+         No recipe in your cookbook. Click  <a href="javascript:" ng-click="newRecipe()">HERE</a> and create one
+         </span>
+      </div>
+   </div>
+</ion-content>
