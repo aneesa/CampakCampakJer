@@ -65,6 +65,13 @@ angular.module('CampakCampakJer.services', [])
                 });
             },
 			
+			// update an existing recipe to API
+            updateRecipe: function (id, form) {
+                return $http.put(base+'/api/campakcampakjer/recipe/' + id, form, {
+                    method: 'PUT'
+                });
+            },
+			
 			// save a new recipe's step to API
             saveRecipeStep: function (form) {
                 return $http.post(base+'/api/campakcampakjer/recipestep', form, {

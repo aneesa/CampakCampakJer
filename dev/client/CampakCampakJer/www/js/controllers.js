@@ -111,6 +111,21 @@ angular.module('CampakCampakJer.controllers', ['CampakCampakJer.services'])
                 $scope.newTemplate.show();
             };*/
 			
+			// set up slide-up for editing the recipe's name
+			$ionicModal.fromTemplateUrl('templates/slide-editrecipe.html', function (modal) {
+                $scope.editRecipeTemplate = modal;
+            }, {
+				// Use our scope for the scope of the modal to keep it simple
+				scope: $scope
+			});
+
+			// show slide-up for editing the recipe's name when called
+            $scope.editRecipe = function () {
+				// save the original step in case user cancels
+				$scope.originalName = $scope.recipe.name;
+                $scope.editRecipeTemplate.show();
+            };
+			
 			// set up slide-up for editing the recipe step
 			$ionicModal.fromTemplateUrl('templates/slide-editrecipestep.html', function (modal) {
                 $scope.editRecipeStepTemplate = modal;
@@ -178,6 +193,41 @@ angular.module('CampakCampakJer.controllers', ['CampakCampakJer.services'])
     };
 })
 
+// controller for slide-editrecipe.html
+.controller('myRecipeCtrl', function ($rootScope, $scope, API, $window) {
+
+		// close this slide-up when called
+        $scope.close = function () {
+			$scope.recipe.name = $scope.originalName;
+            $scope.editRecipeTemplate.hide();
+        };
+
+		// update a recipe when called
+        $scope.updateRecipe = function (id) {
+			// get the recipe's name
+			// if name is empty, return nothing 
+			// else close this slide-up and save the new recipe
+			var name = this.recipe.name;
+        	if (!name) return;
+
+			// get the data from user
+            var form = {
+                name: name
+            }
+
+			// update the recipe
+            API.updateRecipe(id, form)
+                .success(function (data, status, headers, config) {
+					// if successful, refresh to the recipe's details tab
+					$scope.editRecipeTemplate.hide();
+                })
+                .error(function (data, status, headers, config) {
+					// if error, notify error messages to user
+                    $rootScope.notify("Oops something went wrong!! Please try again later");
+                });
+        };
+    })
+
 // controller for slide-editrecipestep.html
 .controller('myRecipeStepCtrl', function ($rootScope, $scope, API, $window) {
 
@@ -208,7 +258,6 @@ angular.module('CampakCampakJer.controllers', ['CampakCampakJer.services'])
 				.success(function (data, status, headers, config) {
 					// if successful, refresh to the recipe's details tab
 					$scope.editRecipeStepTemplate.hide();
-					$rootScope.doRefresh(2);
 				})
 				.error(function (data, status, headers, config) {
 					// if error, notify error messages to user

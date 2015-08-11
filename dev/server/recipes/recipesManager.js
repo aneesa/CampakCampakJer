@@ -9,6 +9,7 @@ module.exports = function(server) {
 		// use mongoose to get all recipes in the database
 		Recipe.find()
 			.populate('steps')
+			.sort({ name: 1 })
 			.exec(function(err, recipes) {
 
 				// if there is an error retrieving, send the error. nothing after res.send(err) will execute
@@ -80,6 +81,31 @@ module.exports = function(server) {
 			});
 			
 			res.json(recipe); // return the recipe removed in JSON format
+		});
+    });
+	
+	// update an existing recipe in db
+    server.put('/api/campakcampakjer/recipe/:id', function (req, res) {
+	
+		// use mongoose to get the recipe by id and update it in db
+		Recipe.findById(req.params.id, function(err, recipeToBeUpdated) {
+			// if there is an error retrieving, send the error. nothing after res.send(err) will execute
+			if(err) 
+				return res.send(err);
+				
+			for (var n in req.params) {
+				if (n != "id")
+					recipeToBeUpdated[n] = req.params[n];
+			}
+			
+			// merge req.params/recipe with the server/recipe
+			recipeToBeUpdated.save(function(err, recipeSaved) {
+				// if there is an error retrieving, send the error. nothing after res.send(err) will execute
+				if(err) 
+					return res.send(err);
+					
+				res.json(recipeSaved); // return the recipe updated in JSON format
+			});
 		});
     });
 	
@@ -209,46 +235,4 @@ module.exports = function(server) {
 			});
 		});
     });
-	
-//	// update an existing recipe in db
-//    server.put('/api/campakcampakjer/recipe/:id', function (req, res) {
-//	
-//		// use mongoose to get the recipe by id from the database
-//		Recipe.findOne({ _id : req.params.id})
-//			.populate('steps')
-//			.exec(function(err, recipe) {
-//
-//				// if there is an error retrieving, send the error. nothing after res.send(err) will execute
-//				if (err)
-//					return res.send(err)
-//
-//				res.json(recipe); // return the recipe in JSON format
-//		});
-//	
-////		db.recipes.findOne({
-////			_id: db.ObjectId(req.params.id)
-////		}, function (err, recipe) {
-////			// merge req.params/product with the server/product
-////
-////			var updatedRecipe = {}; // updated products 
-////			// logic similar to jQuery.extend(); to merge 2 objects.
-////			for (var n in recipe) {
-////				updatedRecipe[n] = recipe[n];
-////			}
-////			for (var n in req.params) {
-////				if (n != "id")
-////					updatedRecipe[n] = req.params[n];
-////			}
-////			db.bucketLists.update({
-////				_id: db.ObjectId(req.params.id)
-////			}, updatedRecipe, {
-////				multi: false
-////			}, function (err, recipe) {
-////				res.writeHead(200, {
-////					'Content-Type': 'application/json; charset=utf-8'
-////				});
-////				res.end(JSON.stringify(recipe));
-////			});
-////		});
-//    });
 }
