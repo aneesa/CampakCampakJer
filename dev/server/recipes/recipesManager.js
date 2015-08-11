@@ -52,6 +52,37 @@ module.exports = function(server) {
         });
 	});
 	
+	// delete an existing recipe from db
+    server.del('/api/campakcampakjer/recipe/:id', function (req, res) {
+	
+		// use mongoose to get the recipe  by id and remove it from db
+		Recipe.findOne({ _id : req.params.id})
+		.populate('steps')
+		.exec(function(err, recipe) {
+			// if there is an error retrieving, send the error. nothing after res.send(err) will execute
+			if(err) 
+				return res.send(err);
+			
+			// remove all the recipe's steps from db
+			for(var i = 0; i < recipe.steps.length; i++) {
+				recipe.steps[i].remove(function(err) {
+					// if there is an error retrieving, send the error. nothing after res.send(err) will execute
+					if(err) 
+						return res.send(err);
+				});	
+			}
+			
+			// now that all the steps have been removed, remove the recipe
+			recipe.remove(function(err) {
+				// if there is an error retrieving, send the error. nothing after res.send(err) will execute
+				if(err) 
+					return res.send(err);
+			});
+			
+			res.json(recipe); // return the recipe removed in JSON format
+		});
+    });
+	
 	// save a recipe step to db
 	server.post('/api/campakcampakjer/recipestep', function(req, res) {
 	
@@ -104,12 +135,6 @@ module.exports = function(server) {
 	// delete an existing recipe step from db
     server.del('/api/campakcampakjer/recipestep/:recipeId/:id', function (req, res) {
 	
-		// first find the recipe step
-		// remove it from db
-		// remove it from recipe.steps
-		// get the position
-		// rearrange position
-	
 		// use mongoose to get the recipe step by id and remove it from db
 		RecipeStep.findById(req.params.id, function(err, recipeStepToBeRemoved) {
 			// if there is an error retrieving, send the error. nothing after res.send(err) will execute
@@ -156,6 +181,31 @@ module.exports = function(server) {
 						res.json(recipeSaved); // return the recipe updated in JSON format
 					});	
 				});	
+			});
+		});
+    });
+	
+	// update an existing recipe step in db
+    server.put('/api/campakcampakjer/recipestep/:id', function (req, res) {
+	
+		// use mongoose to get the recipe step by id and update it in db
+		RecipeStep.findById(req.params.id, function(err, recipeStepToBeUpdated) {
+			// if there is an error retrieving, send the error. nothing after res.send(err) will execute
+			if(err) 
+				return res.send(err);
+				
+			for (var n in req.params) {
+				if (n != "id")
+					recipeStepToBeUpdated[n] = req.params[n];
+			}
+			
+			// merge req.params/recipestep with the server/recipestep
+			recipeStepToBeUpdated.save(function(err, recipeStepSaved) {
+				// if there is an error retrieving, send the error. nothing after res.send(err) will execute
+				if(err) 
+					return res.send(err);
+					
+				res.json(recipeStepSaved); // return the recipe step updated in JSON format
 			});
 		});
     });

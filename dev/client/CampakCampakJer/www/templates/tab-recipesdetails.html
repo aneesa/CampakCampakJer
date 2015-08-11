@@ -1,12 +1,17 @@
 <ion-header-bar class="bar-positive">
    <h1 class="title">{{ recipe.name }}</h1>
+   <!-- TODO: After saving a new recipe, the app does not refresh to the main view. But the new recipe is saved.
    <button class="button button-clear" ng-click="newRecipe()">New</button>
+   -->
 </ion-header-bar>
 <ion-content class="has-header padding" has-tabs="true" on-refresh="onRefresh()">
 	<ion-list>
-      <ion-item class="item-remove-animate item-avatar item-icon-right" ng-repeat="step in recipe.steps" type="item-text-wrap">
+      <ion-item ng-repeat="step in recipe.steps" type="item-text-wrap">		
+		<ion-option-button class="ion-edit" ng-click="editRecipeStep(step)"> </ion-option-button>
+        &nbsp 
+		<ion-delete-button class="ion-trash-b" ng-click="deleteRecipeStep('{{recipe._id}}','{{step._id}}')"> </ion-delete-button>
+        &nbsp 
         Step {{step.position}} : {{step.step}}
-		<i class="icon ion-trash-b icon-actions margin" ng-click="deleteRecipeStep('{{recipe._id}}','{{step._id}}')"></i>
       </ion-item>
     </ion-list>
    <div class="card">
