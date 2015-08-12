@@ -7,7 +7,7 @@
 </ion-header-bar>
 <ion-content class="has-header padding" has-tabs="true" on-refresh="onRefresh()">
 	<ion-list>
-      <ion-item ng-repeat="step in recipe.steps" type="item-text-wrap">		
+      <ion-item ng-repeat="step in recipe.steps" class="item-text-wrap">		
 		<ion-option-button class="ion-edit" ng-click="editRecipeStep(step)"> </ion-option-button>
         &nbsp 
 		<ion-delete-button class="ion-trash-b" ng-click="deleteRecipeStep('{{recipe._id}}','{{step._id}}')"> </ion-delete-button>
@@ -18,7 +18,7 @@
    <div class="card">
       <div class="item item-text-wrap">
          <span>
-			<input type="text" placeholder="Add a step..." ng-model="recipe.addStep">
+			<textarea rows="3" style="resize: none" placeholder="Add a step..." ng-model="recipe.addStep"></textarea>
          </span> 
 		 <button class="button button-positive" ng-click="addRecipeStep()">Add</button>
       </div>
